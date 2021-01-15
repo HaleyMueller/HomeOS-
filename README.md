@@ -15,6 +15,9 @@ This is currently hardcoded to grab information from a Pi-hole service. In the f
 ### Services
 This uses a lot of c# reflection that converts a class with custom attributes onto a webpage. Each property in the class can have an override name and what type of field it is so it can create HTML correctly. It automaticaly saves onto each property of the class without any extra code.
 
+### AFK Screen
+If you haven't interacted with the web page for a set amount of time that you can change in your preferences, you will be taken to a screen that will display the time/date or both depending on your preference settings.
+
 ### Preferences
 These are the settings that are based off your screen interface.
 
