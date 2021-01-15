@@ -13,6 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Util
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BarcodeCommon", "BarcodeCommon\BarcodeCommon.csproj", "{13266827-F86F-48A0-B5BA-196B8403C27D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{16796F12-AA7F-4CAD-98F5-26B53B0904CB}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\Desktop\temp_service.PNG = ..\..\..\Desktop\temp_service.PNG
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
