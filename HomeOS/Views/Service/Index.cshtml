@@ -1,0 +1,286 @@
+﻿@model HomeOS.Models.ServicesModel
+
+@{
+    ViewData["Title"] = "Service - Settings";
+    ViewData["NavLocation"] = "ServiceSettings";
+}
+
+<style>
+    /* The switch - the box around the slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* The slider */
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e74a3b;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #1cc88a;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #1cc88a;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+</style>
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Services</h1>
+    <a href="#" onclick="Save()" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <i class="fas fa-save fa-sm text-white-50"></i> Save
+    </a>
+</div>
+
+@foreach (var service in Model.Services)
+{
+    <div class="row" style="padding-top:1em;">
+        <div class="col-md-12">
+            <div class="card border-left-primary shadow h-100 py-2 service" style="padding-top: 0px !important;">
+                <div class="card-header py-3">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                @service.Name
+                            </div>
+                        </div>
+
+                        <input type="hidden" id="serviceName" value="@(service.Name)" />
+
+                        @if (service.Enabled.HasValue)
+                        {
+                            <div class="col-auto">
+                                <label class="switch">
+                                    <input type="hidden" id="propName" value="Enabled" />
+                                    <input type="checkbox" class="propertyValue" id="chkEnable" @(service.Enabled.GetValueOrDefault() ? "checked" : "")>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="card-body">
+                    @{
+                        var properties = service.GetType().GetProperties();
+                    }
+
+                    @foreach (var property in properties)
+                    {
+                        var customAttributes = property.GetCustomAttributes(true);
+
+                        bool show = false;
+                        string displayName = property.Name;
+                        BusinessImplementation.DisplayTypeAttribute.DisplayTypes displayType = BusinessImplementation.DisplayTypeAttribute.DisplayTypes.text;
+
+                        foreach (var attribute in customAttributes)
+                        {
+                            if (attribute is BusinessImplementation.DisplayAttribute)
+                            {
+                                var attr = (BusinessImplementation.DisplayAttribute)attribute;
+
+                                displayName = attr.Name;
+
+                                show = true;
+                            }
+                            else if (attribute is BusinessImplementation.DisplayTypeAttribute)
+                            {
+                                var attr = (BusinessImplementation.DisplayTypeAttribute)attribute;
+
+                                displayType = attr.DisplayType;
+                            }
+                        }
+
+                        if (show)
+                        {
+                            <input type="hidden" id="propName" value="@(property.Name)" />
+
+                            switch (displayType)
+                            {
+                                case BusinessImplementation.DisplayTypeAttribute.DisplayTypes.text:
+                                    <div class="input-group input-group-sm mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm">@displayName</span>
+                                        </div>
+                                        <input type="text" class="form-control propertyValue" aria-label="Small" aria-describedby="inputGroup-sizing-sm" value="@property.GetValue(service)">
+                                    </div>
+                                    break;
+                                case BusinessImplementation.DisplayTypeAttribute.DisplayTypes.password:
+                                    <div class="input-group input-group-sm mb-3" id="show_hide_password">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm">@displayName</span>
+                                        </div>
+                                        <input id="pwd@(service.Name)@(property.Name)Input" type="password" class="form-control propertyValue" aria-label="Small" aria-describedby="inputGroup-sizing-sm" value="@property.GetValue(service)">
+                                        <div class="input-group-prepend">
+                                            <a href="" onclick="PasswordEyeClicked('#pwd@(service.Name)@(property.Name)Input', '#pwd@(service.Name)@(property.Name)Eye')"><i id="pwd@(service.Name)@(property.Name)Eye" class="fa fa-eye-slash" aria-hidden="true" style="margin-left: .5em"></i></a>
+                                        </div>
+                                    </div>
+                                    break;
+                                case BusinessImplementation.DisplayTypeAttribute.DisplayTypes.checkbox:
+                                    <div class="input-group input-group-sm mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm">@displayName</span>
+                                        </div>
+                                        <label class="switch" style="margin-left:1em;">
+                                            <input type="checkbox" class="propertyValue" id="chkEnable" @(property.GetValue(service).Equals(true) ? "checked" : "")>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                    break;
+                                case BusinessImplementation.DisplayTypeAttribute.DisplayTypes.integer:
+                                    <div class="input-group input-group-sm mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm">@displayName</span>
+                                        </div>
+                                        <input type="number" class="form-control propertyValue" aria-label="Small" aria-describedby="inputGroup-sizing-sm" value="@property.GetValue(service)">
+                                    </div>
+                                    break;
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        var inputE = null;
+        var inputI = null;
+
+        function PasswordEyeClicked(inputElementID, iElementID) {
+            inputE = inputElementID;
+            inputI = iElementID;
+
+            event.preventDefault();
+            if ($(inputElementID).attr("type") == "text") {
+                $(inputElementID).attr('type', 'password');
+                $(iElementID).addClass("fa-eye-slash");
+                $(iElementID).removeClass("fa-eye");
+            }
+            else if ($(inputElementID).attr("type") == "password") {
+                $(inputElementID).attr('type', 'text');
+                $(iElementID).removeClass("fa-eye-slash");
+                $(iElementID).addClass("fa-eye");
+            }
+        }
+
+        var test = null;
+
+        var testProp = null;
+
+        function GetAllServicesFromUI() {
+
+            var services = [];
+
+            $('.service').each(function (i, e) {
+                var service = e;
+
+                var inputs = $(service).find('input');
+
+                var serviceName = null;
+                var properties = [];
+                var values = [];
+
+                testProp = properties;
+
+                inputs.each(function (i, e) {
+                    if (e.id == "serviceName") {
+                        serviceName = e.value
+                    } else {
+                        if (e.id == "propName") {
+                            properties.push(e.value);
+                        } else {
+                            if ($(e).is(':checkbox')) {
+                                values.push($(e).prop("checked").toString());
+                            } else {
+                                values.push(e.value);
+                            }
+                        }
+                    }
+                });
+
+                var propertiess = [];
+
+                properties.forEach(function (v, i) {
+                    propertiess.push({
+                        propertyName: v,
+                        propertyValue: values[i]
+                    })
+                });
+
+                var service = {
+                    name: serviceName,
+                    properties: propertiess
+                };
+
+                services.push(service);
+            });
+
+            test = services;
+
+            return services;
+        }
+
+        function Save() {
+            $.ajax({
+                url: '/Service/Save',
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data);
+                },
+                data: JSON.stringify(GetAllServicesFromUI())
+            });
+        }
+    </script>
+
+
+    @*<script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+        });
+    </script>*@
+}

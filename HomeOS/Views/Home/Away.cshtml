@@ -1,0 +1,259 @@
+﻿@model HomeOS.Models.ServicesModel
+
+@{
+    Layout = null;
+
+    ViewData["Title"] = "AFK";
+    //ViewData["NavLocation"] = "ServiceSettings";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewData["Title"] - HomeOS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100%;
+            background: black;
+            overflow: hidden; /* Hide scrollbars */
+            cursor: none;
+        }
+
+        .clock {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            color: white;
+            font-size: 60px;
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 7px;
+        }
+
+        .date {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+            font-size: 5vw;
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="MyClockDisplay" class="clock"></div>
+    <div id="MyDate" class="date"></div>
+
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        var showTime = false;
+        var showDate = false;
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '/Client/GetInfo',
+                type: 'get',
+                success: function (data) {
+                    console.log(data);
+                    showTime = data.showTime;
+                    showDate = data.showDate;
+                    runClock();
+                }
+            });
+        });
+
+        $(document.body).click(function () {
+            window.history.back();
+        });
+
+        function runClock() {
+            var date = new Date();
+            var y = date.getFullYear();
+            var M = date.getMonth() + 1;
+            var d = date.getDate();
+            var D = date.getDay(); //Day of week in enum
+            var h = date.getHours(); // 0 - 23
+            var m = date.getMinutes(); // 0 - 59
+            var s = date.getSeconds(); // 0 - 59
+            var session = "AM";
+
+            if (h == 0) {
+                h = 12;
+            }
+
+            if (h > 12) {
+                h = h - 12;
+                session = "PM";
+            }
+
+            h = (h < 10) ? "0" + h : h;
+            m = (m < 10) ? "0" + m : m;
+            s = (s < 10) ? "0" + s : s;
+
+            var time = h + ":" + m + ":" + s + " " + session;
+
+            if (showTime) {
+                document.getElementById("MyClockDisplay").innerText = time;
+                document.getElementById("MyClockDisplay").textContent = time;
+            }
+
+            var date = "The " + d + NumberToPlace(d) + " of " + MonthToString(M) + ", " + y;
+
+            if (showDate) {
+                document.getElementById("MyDate").innerText = date;
+                document.getElementById("MyDate").textContent = date;
+            }
+
+            setTimeout(runClock, 1000);
+        }
+
+        function NumberToPlace(num) {
+            if (num == 1) {
+                return "st"
+            }
+            else if (num == 2) {
+                return "nd"
+            }
+            else if (num == 3) {
+                return "rd"
+            }
+            else if (num == 4) {
+                return "th"
+            }
+            else if (num == 5) {
+                return "th"
+            }
+            else if (num == 6) {
+                return "th"
+            }
+            else if (num == 7) {
+                return "th"
+            }
+            else if (num == 8) {
+                return "th"
+            }
+            else if (num == 9) {
+                return "th"
+            }
+            else if (num == 10) {
+                return "th"
+            }
+            else if (num == 11) {
+                return "th"
+            }
+            else if (num == 12) {
+                return "th"
+            }
+            else if (num == 13) {
+                return "th"
+            }
+            else if (num == 14) {
+                return "th"
+            }
+            else if (num == 15) {
+                return "th"
+            }
+            else if (num == 16) {
+                return "th"
+            }
+            else if (num == 17) {
+                return "th"
+            }
+            else if (num == 18) {
+                return "th"
+            }
+            else if (num == 19) {
+                return "th"
+            } else if (num == 20) {
+                return "th"
+            } else if (num == 21) {
+                return "st"
+            } else if (num == 22) {
+                return "nd"
+            } else if (num == 23) {
+                return "rd"
+            } else if (num == 24) {
+                return "th"
+            } else if (num == 25) {
+                return "th"
+            } else if (num == 26) {
+                return "th"
+            } else if (num == 27) {
+                return "th"
+            } else if (num == 28) {
+                return "th"
+            } else if (num == 29) {
+                return "th"
+            } else if (num == 30) {
+                return "th"
+            }
+            else if (num == 31) {
+                return "st"
+            }
+        }
+
+        function MonthToString(month) {
+            if (month == 1) {
+                return "January";
+            }
+            else if (month == 2) {
+                return "February";
+            }
+            else if (month == 3) {
+                return "March";
+            }
+            else if (month == 4) {
+                return "April";
+            }
+            else if (month == 5) {
+                return "May";
+            }
+            else if (month == 6) {
+                return "June";
+            }
+            else if (month == 7) {
+                return "July";
+            }
+            else if (month == 8) {
+                return "August";
+            }
+            else if (month == 9) {
+                return "September";
+            }
+            else if (month == 10) {
+                return "October";
+            }
+            else if (month == 11) {
+                return "November";
+            }
+            else if (month == 12) {
+                return "December";
+            }
+        }
+    </script>
+</body>
+</html>

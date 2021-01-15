@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>cdb834aa-1b7b-4ab4-a201-00af86795171</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BarcodeCommon\BarcodeCommon.csproj" />
+    <ProjectReference Include="..\BusinessImplementation\BusinessImplementation.csproj" />
+    <ProjectReference Include="..\Pi-Hole\Pi-Hole.csproj" />
+    <ProjectReference Include="..\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\plugins\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,160 @@
+﻿@model AddToAreaModel
+
+@{
+    ViewData["Title"] = "Client - Preferences";
+    ViewData["NavLocation"] = "ClientPreferences";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Add Device</h1>
+</div>
+
+@if (Model.ScreenInterfaces.Any())
+{
+    <div class="row" style="padding-top:1em;">
+        <div class="col-md-12">
+            <div class="card border-left-primary shadow h-100 py-2 service" style="padding-top: 0px !important;">
+                <div class="card-header py-3">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Overwrite Existing Device
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="selDevice">Select device:</label>
+                        <select class="form-control" id="selDevice">
+                            @foreach (var screen in Model.ScreenInterfaces)
+                            {
+                                <option value="@screen.GUID">@screen.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <a href="#" style="float:right" onclick="Save(true)" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                        <i class="fas fa-pencil-alt fa-sm text-white-50"></i> Overwrite
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row" style="padding-top:1em;">
+    <div class="col-md-12">
+        <div class="card border-left-primary shadow h-100 py-2 service" style="padding-top: 0px !important;">
+            <div class="card-header py-3">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            New Device
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="sel1">Select area:</label>
+                    <select class="form-control" id="sel1" style="display:inline-block;">
+                    </select>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="display:inline-block; margin-top:.25em; background-color:#1cc88a">
+                        <i class="fas fa-plus fa-sm text-white-50"></i> Add New Area
+                    </button>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">Device Name</span>
+                    </div>
+                    <input type="text" id="txtDeviceName" class="form-control propertyValue" aria-label="Small" aria-describedby="inputGroup-sizing-sm" value="">
+                </div>
+                <a href="#" style="float:right" onclick="Save(false)" class="d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Add
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalArea">
+
+</div>
+
+<button id="btnModalClose" type="button" data-toggle="modal" data-target="#exampleModal" style="display:none">
+</button>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            LoadAreas();
+
+            $.ajax({
+                url: '/Area/Edit',
+                type: 'get',
+                success: function (data) {
+                    console.log(data);
+
+                    $('#modalArea').html(data);
+                },
+                data: {
+
+                }
+            });
+        });
+
+        function LoadAreas() {
+            $.ajax({
+                url: '/Shared/GetAllAreas',
+                type: 'get',
+                success: function (data) {
+                    console.log(data);
+                    $('#sel1').html("");
+                    $.each(data, function (i, v) {
+                        $('#sel1').append('<option value="' + v.guid + '">' + v.name + '</option>');
+                    });
+                }
+            });
+        }
+
+        function SaveArea() {
+            var obj = { guid: $('#guid').val(), name: $('#txtAreaName').val() };
+
+            $.ajax({
+                url: '/Area/Save',
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data);
+
+                    if (data == true) {
+                        $('#btnModalClose').click();
+                        LoadAreas();
+                        //$('#exampleModal').modal('hide');
+                    }
+                },
+                data: JSON.stringify(obj)
+            });
+        }
+
+        function Save(overwrite) {
+            var obj = { areaGUID: $('#sel1').val(), clientGUID: '@(Model.ClientGUID)', overwriteDevice: overwrite, deviceGUID: $('#selDevice').val(), txtDeviceName: $('#txtDeviceName').val() };
+
+            $.ajax({
+                url: '/Device/SaveScreenInterface',
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data);
+
+                    if (data == true) {
+                        window.location.href = '/Home/Index';
+                    }
+                },
+                data: JSON.stringify(obj)
+            });
+        }
+    </script>
+}
