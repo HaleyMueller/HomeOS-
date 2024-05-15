@@ -7,7 +7,12 @@
     var blockedQueries = Model.AllQueries.DataSerialized.Where(x => x.Status == Pi_Hole.Models.GetAllQueriesModel.DataSerializedModel.StatusEnum.BlockedByWildCard || x.Status == Pi_Hole.Models.GetAllQueriesModel.DataSerializedModel.StatusEnum.BlockedByGravity).ToList();
     var nonBlockedQueries = Model.AllQueries.DataSerialized.Where(x => x.Status == Pi_Hole.Models.GetAllQueriesModel.DataSerializedModel.StatusEnum.AnsweredByCache || x.Status == Pi_Hole.Models.GetAllQueriesModel.DataSerializedModel.StatusEnum.ForwardedToUpstreamServer).ToList();
 
-    decimal queriesBlockedPercentage = Math.Round((decimal)((double)blockedQueries.Count / (double)nonBlockedQueries.Count) * 100, 2);
+    decimal queriesBlockedPercentage = 0;
+
+    if (blockedQueries.Count > 0 && nonBlockedQueries.Count > 0)
+    {
+        queriesBlockedPercentage = Math.Round((decimal)((double)blockedQueries.Count / (double)nonBlockedQueries.Count) * 100, 2);
+    }
 }
 
 <style>

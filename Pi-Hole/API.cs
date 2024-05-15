@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Pi_Hole
 {
     public static class API
     {
-        public static string URL = "http://192.168.1.5/admin/api.php";
+        public static string URL = "http://192.168.0.26/admin/api.php";
         public static string TOKEN = "344d14ed3488954ecbf30fe9460900e6198b0893c802d76a9477c4f8962c3f8b";
 
         public static Models.TypeModel GetType()
@@ -26,11 +28,16 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.TypeModel>(val);
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.TypeModel>(val);
 
-            return obj;
+                return obj;
+            }
+            catch { }
+            return new Models.TypeModel();
         }
 
         public static Models.VersionModel GetVersion()
@@ -51,11 +58,16 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.VersionModel>(val);
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.VersionModel>(val);
 
-            return obj;
+                return obj;
+            }
+            catch { }
+            return new Models.VersionModel();
         }
 
         public static Models.SummaryRaw GetSummaryRaw()
@@ -75,12 +87,16 @@ namespace Pi_Hole
                 Key = "summaryRaw",
                 UseEquals = false
             });
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.SummaryRaw>(val);
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.SummaryRaw>(val);
-
-            return obj;
+                return obj;
+            }
+            catch { }
+            return new Models.SummaryRaw();
         }
 
         public static Models.OverTimeData10MinsModel GetOverTimeData10Mins()
@@ -101,11 +117,16 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.OverTimeData10MinsModel>(val);
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.OverTimeData10MinsModel>(val);
 
-            return obj;
+                return obj;
+            }
+            catch { }
+            return new Models.OverTimeData10MinsModel();
         }
 
         public static Models.TopItemsModel GetTopItems()
@@ -126,11 +147,17 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.TopItemsModel>(val);
+                val = Regex.Replace(val, ",?\"[^\"]+\":[[]]", "");
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.TopItemsModel>(val);
 
-            return obj;
+                return obj;
+            }
+            catch { }
+            return new Models.TopItemsModel();
         }
 
         public static Models.GetQuerySourcesModel GetQuerySources()
@@ -151,11 +178,16 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetQuerySourcesModel>(val);
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetQuerySourcesModel>(val);
 
-            return obj;
+                return obj;
+            }
+            catch { }
+            return new Models.GetQuerySourcesModel();
         }
 
         public static Models.GetForwardDestinationsModel GetForwardDestinations()
@@ -176,11 +208,18 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetForwardDestinationsModel>(val);
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            return obj;
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetForwardDestinationsModel>(val);
+
+                return obj;
+            }
+            catch { }
+
+            return new Models.GetForwardDestinationsModel();
         }
 
         public static Models.GetQueryTypesModel GetQueryTypes()
@@ -201,11 +240,20 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetQueryTypesModel>(val);
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetQueryTypesModel>(val);
 
-            return obj;
+                return obj;
+            }
+            catch
+            {
+
+            }
+
+            return new Models.GetQueryTypesModel();
         }
 
         public static Models.GetAllQueriesModel GetAllQueries()
@@ -226,12 +274,22 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
-
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetAllQueriesModel.DataModel>(val);
-
             var ret = new Models.GetAllQueriesModel();
-            ret.Data = obj;
+
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
+
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.GetAllQueriesModel.DataModel>(val);
+                ret.Data = obj;
+            }
+            catch
+            {
+
+            }
+
+            
+            
             ret.UpdateSerializedModel();
 
             return ret;
@@ -255,11 +313,19 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EnableModel>(val);
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.EnableModel>(val);
 
-            return obj;
+                return obj;
+            }
+            catch
+            {
+
+            }
+            return new Models.EnableModel();
         }
 
         public static Models.DisableModel Disable()
@@ -280,11 +346,20 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
 
-            var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.DisableModel>(val);
+                var val = webClient.Post(URL, queryParms, null, null).Result;
 
-            return obj;
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.DisableModel>(val); 
+                return obj;
+            }
+            catch
+            {
+
+            }
+
+            return new Models.DisableModel();
         }
 
         public static string GetLastBlockedDomain()
@@ -305,9 +380,19 @@ namespace Pi_Hole
                 UseEquals = false
             });
 
-            var val = webClient.Post(URL, queryParms, null, null).Result;
+            try
+            {
 
-            return val;
+                var val = webClient.Post(URL, queryParms, null, null).Result;
+
+                return val;
+            }
+            catch
+            {
+
+            }
+
+            return "";
         }
     }
 }

@@ -6,7 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
     <title>@ViewData["Title"] - HomeOS</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 
@@ -16,6 +19,7 @@
 
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
+    @RenderSection("Head", required: false)
 </head>
 <body id="page-top">
 
@@ -102,6 +106,17 @@
                 <a class="nav-link" href="/PiHole/Index">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Index</span>
+                </a>
+            </li>
+
+            <div class="sidebar-heading">
+                External Site
+            </div>
+
+            <li class="nav-item @(ViewData["NavLocation"] == "ExternalSite" ? "active" : "")">
+                <a class="nav-link" href="/ExternalSite/Index">
+                    <i class="fas fa-fw fa-sitemap"></i>
+                    <span>View</span>
                 </a>
             </li>
 

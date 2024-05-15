@@ -1,0 +1,88 @@
+
+
+make preferences where you candisable time out on certain pages. Will have to have a dynamic page list with all pages
+buttons on screen to go to pages
+make on screen keyboard work on iframe. look into pi on screen keyboard
+double check preferences and how we check cookie if the client is new. one is checking client settings one is checking users
+
+
+
+
+https://y3cws7bhzdpm0pas5q1r0m961a99pjga.ui.nabu.casa/auth/external/callback
+
+964549927203-ivk2rbvethi1bs7fdpl483qk182jdorc.apps.googleusercontent.com
+
+5P1P0FVUgxCWL5opbS2A70Hi
+
+Project ID: ceb35c6e-b30b-4f03-872d-86aef0654a21
+
+Client identifier:
+https://stackoverflow.com/questions/3140341/how-can-i-create-persistent-cookies-in-asp-net
+
+
+For finding castables and casting objects
+https://github.com/Tapanila/SharpCaster
+
+Allow media upload. Have wrapper to view files in the saved folder and load each file type correctly. Such as load mp4 with video, txt with text editor.
+
+AREA:
+Create list of string for area. Make default values and ability to add own values.
+
+SERVICE:
+
+Add function when enabled or disable to remove devices from master list.
+
+
+SCREEN INTERFACE:
+part of device. Can assign themselves to already made user preferences if they loose cookies.
+they have custome entities attached. such as name, 
+
+Think of way to automate stuff like send text to screen interface or play audio. Ability to have screen groups
+
+DEVICE
+
+can have more than 1 entity
+
+has a area
+
+has device name
+
+has font awesome icon
+
+has device info
+
+ENTITY
+
+create list of entity
+
+entity has name, icon, entity_ID, is_enabled, value
+
+thermostat.temp is a entity
+
+entity has font awesome icon string
+
+CARDS
+
+cards have mutliple types. Types are different UI html
+
+cards can have more than one entity value.
+
+Such as percentage which will use 2 entity values
+
+Add cards to dashboard. Ability to switch from default to preferences.
+
+cards have an order.
+
+cards are based of classes
+
+
+
+
+
+Make client settings and service settins on one page. Make them implement IUISaveable
+When doing entities, make them properties that have attribute or with overrided get methods
+
+make dashboard load cards after load with ajax partial view. make it show a loading symbol
+
+set up toasts and make api wrapper for all ajax background requests: AreaSave, ClientSave
+TODO show just raw file client settings and let javascript figure it out
