@@ -497,7 +497,7 @@
                 type: 'get',
                 success: function (data) {
                     console.log(data);
-                    if ((data.isNewClient == true) || (data.isNewClient == false && data.hasScreenInterfaceDevice == false)) {
+                    if (data.hasScreenInterfaceDevice == false) {
                         if (window.location.href.includes('/Device/AddScreenInterface') == false) {
                             window.location.href = '/Device/AddScreenInterface';
                         }

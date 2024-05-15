@@ -22,16 +22,25 @@ namespace HomeOS.Controllers
 
         public IActionResult Index() //Eventualy do dynamic cards and stuff on this page so make a new object for each type of cards such as graphs, pi chart, status cards, percentage bars
         {
-            var piHoleQueries = Pi_Hole.API.GetAllQueries();
-            var piHoleLastBlockedDomain = Pi_Hole.API.GetLastBlockedDomain();
-            var piHoleTopItems = Pi_Hole.API.GetTopItems();
-            var piStatus = Pi_Hole.API.GetSummaryRaw();
-
             var model = new Models.HomeIndexModel();
-            model.AllQueries = piHoleQueries;
-            model.LastBlockedDomain = piHoleLastBlockedDomain;
-            model.TopItems = piHoleTopItems;
-            model.Enabled = piStatus.status == "enabled" ? true : false; //Todo use websocket to do site wide updates without ajax requests
+            model.AllQueries = new Pi_Hole.Models.GetAllQueriesModel();
+            model.AllQueries.DataSerialized = new List<Pi_Hole.Models.GetAllQueriesModel.DataSerializedModel>();
+            model.TopItems = new Pi_Hole.Models.TopItemsModel();
+
+            try //TODO put this in a async plugin system
+            {
+                var piHoleQueries = Pi_Hole.API.GetAllQueries();
+                var piHoleLastBlockedDomain = Pi_Hole.API.GetLastBlockedDomain();
+                var piHoleTopItems = Pi_Hole.API.GetTopItems();
+                var piStatus = Pi_Hole.API.GetSummaryRaw();
+                model.AllQueries = piHoleQueries;
+                model.LastBlockedDomain = piHoleLastBlockedDomain;
+                model.TopItems = piHoleTopItems;
+                model.Enabled = piStatus.status == "enabled" ? true : false; //Todo use websocket to do site wide updates without ajax requests
+            }
+            catch { }
+            
+            
 
             return View(model);
         }
