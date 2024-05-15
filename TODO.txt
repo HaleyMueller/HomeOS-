@@ -8,14 +8,6 @@ double check preferences and how we check cookie if the client is new. one is ch
 
 
 
-https://y3cws7bhzdpm0pas5q1r0m961a99pjga.ui.nabu.casa/auth/external/callback
-
-964549927203-ivk2rbvethi1bs7fdpl483qk182jdorc.apps.googleusercontent.com
-
-5P1P0FVUgxCWL5opbS2A70Hi
-
-Project ID: ceb35c6e-b30b-4f03-872d-86aef0654a21
-
 Client identifier:
 https://stackoverflow.com/questions/3140341/how-can-i-create-persistent-cookies-in-asp-net
 
